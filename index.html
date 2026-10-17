@@ -964,7 +964,7 @@ const rasgosIR = (c) => {
   r.cx = si(fondo(850, 550), (x) => x.rel >= 0.45);
   return r;
 };
-// Fórmula molecular opcional → recuento de elementos y grado de insaturación (IDH = C − (H + X)/2 + N/2 + 1).
+// Fórmula molecular opcional → recuento de elementos y grado de insaturación (IDH = (2C + 2 + N − H − X) / 2).
 const leerFormula = (f) => {
   const s = (f || '').replace(/\s+/g, '').replace(/[₀-₉]/g, (d) => '₀₁₂₃₄₅₆₇₈₉'.indexOf(d));
   if (!s) return null;
@@ -1715,8 +1715,8 @@ function vistaAprender(ancla) {
       <section id="a-insaturacion" class="tarjeta bloque">
         <h2>Grado de insaturación (IDH)</h2>
         <p>El índice de deficiencia de hidrógeno cuenta cuántos anillos y enlaces π tiene una molécula. Se calcula a partir de la fórmula molecular:</p>
-        <div class="formula-bloque mono">IDH = C − (H + X) / 2 + N / 2 + 1</div>
-        <p>donde X son los halógenos. El oxígeno y el azufre no cuentan. Cada anillo o doble enlace suma 1 (también un C=O); un triple enlace suma 2; un anillo bencénico, 4.</p>
+        <div class="formula-bloque">IDH = (2C + 2 + N − H − X) / 2</div>
+        <p>donde C, H, N y X son el número de átomos de carbono, hidrógeno, nitrógeno y halógenos. El oxígeno y el azufre no cuentan. Cada anillo o doble enlace suma 1 (también un C=O); un triple enlace suma 2; un anillo bencénico, 4.</p>
         <div class="calc-idh">
           <label>Fórmula molecular<input id="idh-f" type="text" value="C8H8O2" autocomplete="off" spellcheck="false"></label>
           <div id="idh-r" class="idh-r"></div>
@@ -1873,7 +1873,7 @@ function vistaAprender(ancla) {
     if (f.error) { out.innerHTML = `<p class="aviso">${esc(f.error)}</p>`; return; }
     if (f.idh == null) { out.innerHTML = '<p class="nota">La fórmula debe contener carbono.</p>'; return; }
     const v = f.idh, e = f.e;
-    const desarrollo = `${e.C || 0} − (${e.H || 0}${f.X ? ` + ${f.X}` : ''}) / 2${e.N ? ` + ${e.N} / 2` : ''} + 1`;
+    const desarrollo = `(2·${e.C || 0} + 2${e.N ? ` + ${e.N}` : ''} − ${e.H || 0}${f.X ? ` − ${f.X}` : ''}) / 2`;
     const lectura = v % 1 ? 'Un IDH no entero indica que la fórmula no corresponde a una molécula neutra: revísala.'
       : v < 0 ? 'Un IDH negativo es imposible: revisa la fórmula.'
       : v === 0 ? 'Sin anillos ni enlaces π: descarta carbonilos, dobles y triples enlaces y anillos aromáticos.'
